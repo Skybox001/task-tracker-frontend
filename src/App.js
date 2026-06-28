@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import './App.css'
 
-const API = 'http://localhost:5000/api/tasks'
+const API = 'https://task-tracker-backend-production-0cf6.up.railway.app/api/tasks'
 
 // ── Helper: check if a date is today or overdue ──
 // Returns: 'overdue', 'today', or null
