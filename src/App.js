@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import './App.css'
 
-const API = 'http://localhost:5000/api/tasks'
+const API = 'https://task-tracker-backend-production-0cf6.up.railway.app/api/tasks'
 
 // ── Helper: check if a date is today or overdue ──
 // Returns: 'overdue', 'today', or null
@@ -32,23 +32,24 @@ function App() {
     priority: 'medium',
     deadline: ''
   })
+// Fetch tasks from backend API
+const fetchTasks = useCallback(async () => {
+  try {
+    const url = filter === 'all'
+      ? API
+      : `${API}?status=${filter}`
 
-  // Load tasks when filter changes
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchTasks()
-  }, [filter])
-
-  // Fetch tasks from backend API
-  const fetchTasks = async () => {
-    try {
-      const url = filter === 'all' ? API : `${API}?status=${filter}`
-      const res = await axios.get(url)
-      setTasks(res.data)
-    } catch (error) {
-      console.error('Error fetching tasks:', error)
-    }
+    const res = await axios.get(url)
+    setTasks(res.data)
+  } catch (error) {
+    console.error('Error fetching tasks:', error)
   }
+}, [filter])
+
+// Load tasks when filter changes
+useEffect(() => {
+  fetchTasks()
+}, [fetchTasks])
 
   // Handle form input changes
   const handleChange = (e) => {
